@@ -16,8 +16,8 @@ export default {
         onaccent: "rgb(var(--onaccent) / <alpha-value>)",
       },
       fontFamily: {
-        display: ["Sora", "system-ui", "sans-serif"],
-        body: ["DM Sans", "system-ui", "sans-serif"],
+        display: ["Sora", "Hind Siliguri", "system-ui", "sans-serif"],
+        body: ["DM Sans", "Hind Siliguri", "system-ui", "sans-serif"],
       },
     },
   },

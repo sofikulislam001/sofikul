@@ -40,6 +40,16 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Bangla reads better with normal letter-spacing and a little more line height. */
+html[lang="bn"] h1,
+html[lang="bn"] h2,
+html[lang="bn"] h3 {
+  letter-spacing: 0;
+}
+html[lang="bn"] body {
+  line-height: 1.75;
+}
+
 :focus-visible {
   outline: 2px solid rgb(var(--accent));
   outline-offset: 3px;

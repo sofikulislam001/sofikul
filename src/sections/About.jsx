@@ -1,17 +1,19 @@
 import { MapPin } from "lucide-react";
 import { about, profile } from "../data/content.js";
+import { useLang } from "../i18n.jsx";
 import Reveal from "../components/Reveal.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 
 export default function About() {
+  const { ui, tx } = useLang();
   return (
     <section id="about" aria-labelledby="about-title" className="bg-deep py-24">
       <div className="container-x">
-        <SectionHeading eyebrow="About me" title="A bit about who I am" id="about-title" />
+        <SectionHeading eyebrow={ui.aboutEyebrow} title={ui.aboutTitle} id="about-title" />
         <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <Reveal className="flex flex-col gap-5 text-lg leading-relaxed text-muted">
             {about.bio.map((p, i) => (
-              <p key={i}>{p}</p>
+              <p key={i}>{tx(p)}</p>
             ))}
           </Reveal>
 
@@ -21,13 +23,13 @@ export default function About() {
                 {profile.location && (
                   <li className="flex items-center gap-3">
                     <MapPin size={20} className="text-accent" aria-hidden="true" />
-                    <span>{profile.location}</span>
+                    <span>{tx(profile.location)}</span>
                   </li>
                 )}
-                {about.facts.map((f) => (
-                  <li key={f.label}>
-                    <p className="text-sm text-muted">{f.label}</p>
-                    <p className="font-semibold">{f.value}</p>
+                {about.facts.map((f, i) => (
+                  <li key={i}>
+                    <p className="text-sm text-muted">{tx(f.label)}</p>
+                    <p className="font-semibold">{tx(f.value)}</p>
                   </li>
                 ))}
               </ul>

@@ -1,12 +1,10 @@
 import { profile } from "../data/content.js";
+import { useLang } from "../i18n.jsx";
 
 export default function Logo() {
+  const { ui } = useLang();
   return (
-    <a
-      href="#home"
-      aria-label={`${profile.name} - back to top`}
-      className="flex items-center gap-3"
-    >
+    <a href="#home" aria-label={ui.logoLabel(profile.name)} className="flex items-center gap-3">
       {profile.logo ? (
         <img src={profile.logo} alt="" className="h-10 w-10 object-contain" />
       ) : (
@@ -17,7 +15,7 @@ export default function Logo() {
           {profile.initials}
         </span>
       )}
-      <span className="hidden font-display text-lg font-semibold tracking-tight sm:block">
+      <span className="hidden font-display text-lg font-semibold tracking-tight lg:block">
         {profile.name}
       </span>
     </a>

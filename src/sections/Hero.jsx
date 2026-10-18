@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
 import { profile, stats } from "../data/content.js";
+import { useLang } from "../i18n.jsx";
 import SocialLinks from "../components/SocialLinks.jsx";
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
@@ -10,7 +11,9 @@ const word = {
 };
 
 export default function Hero() {
-  const words = `Hi, I'm ${profile.firstName}.`.split(" ");
+  const { ui, tx } = useLang();
+  const greeting = ui.greeting(profile.firstName);
+  const words = greeting.split(" ");
 
   return (
     <section id="home" className="relative overflow-hidden pb-20 pt-32 sm:pt-40">
@@ -28,18 +31,20 @@ export default function Hero() {
             transition={{ duration: 0.5 }}
             className="eyebrow"
           >
-            {profile.role}
+            {tx(profile.role)}
           </motion.p>
 
+          {/* key makes the headline replay when the language changes */}
           <motion.h1
+            key={greeting}
             variants={container}
             initial="hidden"
             animate="show"
-            aria-label={`Hi, I'm ${profile.firstName}.`}
-            className="font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
+            aria-label={greeting}
+            className="font-display text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl"
           >
             {words.map((w, i) => (
-              <span key={i} className="mr-[0.25em] inline-block overflow-hidden align-bottom" aria-hidden="true">
+              <span key={i} className="mr-[0.25em] inline-block overflow-hidden pb-2 align-bottom" aria-hidden="true">
                 <motion.span variants={word} className="inline-block">
                   {i === words.length - 1 ? (
                     <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">
@@ -59,7 +64,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="max-w-xl text-lg leading-relaxed text-muted sm:text-xl"
           >
-            {profile.intro}
+            {tx(profile.intro)}
           </motion.p>
 
           <motion.div
@@ -70,14 +75,14 @@ export default function Hero() {
           >
             <div className="flex flex-wrap gap-4">
               <a href="#projects" className="btn btn-primary">
-                View projects <ArrowRight size={18} aria-hidden="true" />
+                {ui.viewProjects} <ArrowRight size={18} aria-hidden="true" />
               </a>
               <a href="#contact" className="btn btn-ghost">
-                Contact me
+                {ui.contactMe}
               </a>
               {profile.cvFile && (
                 <a href={profile.cvFile} download className="btn btn-ghost">
-                  <Download size={18} aria-hidden="true" /> Download CV
+                  <Download size={18} aria-hidden="true" /> {ui.downloadCv}
                 </a>
               )}
             </div>
@@ -86,10 +91,10 @@ export default function Hero() {
 
           {stats.length > 0 && (
             <dl className="mt-4 flex flex-wrap gap-x-12 gap-y-6 border-t border-line pt-8">
-              {stats.map((s) => (
-                <div key={s.label}>
+              {stats.map((s, i) => (
+                <div key={i}>
                   <dd className="font-display text-3xl font-bold">{s.value}</dd>
-                  <dt className="text-sm text-muted">{s.label}</dt>
+                  <dt className="text-sm text-muted">{tx(s.label)}</dt>
                 </div>
               ))}
             </dl>
@@ -110,10 +115,10 @@ export default function Hero() {
             <div className="card relative aspect-[4/5] overflow-hidden rounded-[11rem_11rem_2rem_2rem] bg-surface2">
               <img
                 src={profile.photo}
-                alt={`Portrait of ${profile.name}`}
-                width="640"
-                height="800"
-                className="h-full w-full object-cover"
+                alt={ui.portrait(profile.name)}
+                width="598"
+                height="598"
+                className="h-full w-full object-cover object-top"
                 onError={(e) => {
                   if (!e.currentTarget.src.endsWith(profile.photoPlaceholder)) {
                     e.currentTarget.src = profile.photoPlaceholder;

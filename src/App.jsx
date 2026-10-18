@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { MotionConfig } from "framer-motion";
 import { experience, projects, services, skills } from "./data/content.js";
+import { useLang } from "./i18n.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Hero from "./sections/Hero.jsx";
 import About from "./sections/About.jsx";
@@ -13,17 +14,18 @@ import Footer from "./sections/Footer.jsx";
 
 // Sections with no content are skipped automatically (and left out of the menu).
 const navItems = [
-  { id: "about", label: "About", show: true },
-  { id: "skills", label: "Skills", show: skills.length > 0 },
-  { id: "services", label: "Services", show: services.length > 0 },
-  { id: "projects", label: "Projects", show: projects.length > 0 },
-  { id: "experience", label: "Experience", show: experience.length > 0 },
-  { id: "contact", label: "Contact", show: true },
+  { id: "about", show: true },
+  { id: "skills", show: skills.length > 0 },
+  { id: "services", show: services.length > 0 },
+  { id: "projects", show: projects.length > 0 },
+  { id: "experience", show: experience.length > 0 },
+  { id: "contact", show: true },
 ].filter((i) => i.show);
 
 const has = (id) => navItems.some((i) => i.id === id);
 
 export default function App() {
+  const { ui } = useLang();
   const [theme, setTheme] = useState(
     () => document.documentElement.getAttribute("data-theme") || "dark"
   );
@@ -45,7 +47,7 @@ export default function App() {
         href="#about"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-onaccent"
       >
-        Skip to content
+        {ui.skip}
       </a>
       <Navbar items={navItems} theme={theme} onToggleTheme={toggleTheme} />
       <main>

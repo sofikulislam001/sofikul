@@ -3,8 +3,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
+import LangToggle from "./LangToggle.jsx";
+import { useLang } from "../i18n.jsx";
 
 export default function Navbar({ items, theme, onToggleTheme }) {
+  const { ui } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
@@ -54,7 +57,7 @@ export default function Navbar({ items, theme, onToggleTheme }) {
         scrolled ? "glass border-b border-line py-3" : "py-5"
       }`}
     >
-      <nav className="container-x flex items-center justify-between gap-4" aria-label="Main">
+      <nav className="container-x flex items-center justify-between gap-4" aria-label={ui.mainNav}>
         <Logo />
 
         <ul className="hidden items-center gap-1 md:flex">
@@ -65,21 +68,22 @@ export default function Navbar({ items, theme, onToggleTheme }) {
                 className={linkClass(i.id)}
                 aria-current={active === i.id ? "true" : undefined}
               >
-                {i.label}
+                {ui.nav[i.id]}
               </a>
             </li>
           ))}
         </ul>
 
         <div className="flex items-center gap-3">
+          <LangToggle />
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-          <a href="#contact" className="btn btn-primary hidden !min-h-[44px] !py-2 md:inline-flex">
-            Contact me
+          <a href="#contact" className="btn btn-primary hidden !min-h-[44px] !py-2 lg:inline-flex">
+            {ui.contactMe}
           </a>
           <button
             type="button"
             className="flex h-11 w-11 items-center justify-center rounded-full border border-line md:hidden"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? ui.closeMenu : ui.openMenu}
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
@@ -109,7 +113,7 @@ export default function Navbar({ items, theme, onToggleTheme }) {
                       active === i.id ? "text-accent" : "text-ink"
                     }`}
                   >
-                    {i.label}
+                    {ui.nav[i.id]}
                   </a>
                 </li>
               ))}
@@ -119,7 +123,7 @@ export default function Navbar({ items, theme, onToggleTheme }) {
               onClick={() => setOpen(false)}
               className="btn btn-primary mt-3 w-full"
             >
-              Contact me
+              {ui.contactMe}
             </a>
           </motion.div>
         )}
