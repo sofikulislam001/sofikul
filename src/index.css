@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ground: 8 12 24;
+  --deep: 11 17 32;
+  --surface: 17 24 43;
+  --surface2: 24 33 58;
+  --line: 36 48 78;
+  --ink: 234 240 255;
+  --muted: 148 163 192;
+  --accent: 76 141 255;
+  --accent2: 34 211 238;
+  --onaccent: 8 12 24;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --ground: 246 248 252;
+  --deep: 238 242 249;
+  --surface: 255 255 255;
+  --surface2: 241 245 251;
+  --line: 214 222 237;
+  --ink: 13 20 38;
+  --muted: 84 98 125;
+  --accent: 37 99 235;
+  --accent2: 8 145 178;
+  --onaccent: 255 255 255;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  @apply bg-ground font-body text-ink antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.35);
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .btn {
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full px-7 py-3 text-base font-semibold transition duration-200 hover:-translate-y-0.5;
+  }
+  .btn-primary {
+    @apply bg-accent text-onaccent shadow-lg shadow-accent/20 hover:shadow-accent/40;
+  }
+  .btn-ghost {
+    @apply border border-line text-ink hover:border-accent hover:text-accent;
+  }
+  .card {
+    @apply rounded-3xl border border-line bg-surface;
+  }
+  .eyebrow {
+    @apply text-sm font-semibold uppercase tracking-[0.14em] text-accent;
+  }
+  .glass {
+    background: rgb(var(--surface) / 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 30px) scale(1.08); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-36px, -26px) scale(1.1); }
+}
+.blob-a { animation: drift-a 14s ease-in-out infinite; }
+.blob-b { animation: drift-b 17s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
