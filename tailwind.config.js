@@ -16,8 +16,10 @@ export default {
         onaccent: "rgb(var(--onaccent) / <alpha-value>)",
       },
       fontFamily: {
-        display: ["Sora", "Hind Siliguri", "system-ui", "sans-serif"],
-        body: ["DM Sans", "Hind Siliguri", "system-ui", "sans-serif"],
+        display: ['"Space Grotesk"', '"Hind Siliguri"', "system-ui", "sans-serif"],
+        body: ['"Space Grotesk"', '"Hind Siliguri"', "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', '"Hind Siliguri"', "ui-monospace", "monospace"],
+        serif: ['"Instrument Serif"', '"Hind Siliguri"', "serif"],
       },
     },
   },

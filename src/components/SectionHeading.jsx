@@ -1,14 +1,18 @@
 import Reveal from "./Reveal.jsx";
+import Emph from "./Emph.jsx";
 
-export default function SectionHeading({ eyebrow, title, id }) {
+export default function SectionHeading({ index, eyebrow, title, id }) {
   return (
     <Reveal className="mb-12 flex flex-col gap-3">
-      <p className="eyebrow">{eyebrow}</p>
+      <p className="font-mono text-sm uppercase tracking-[0.16em] text-accent">
+        {index ? `// ${index} ` : "// "}
+        {eyebrow}
+      </p>
       <h2
         id={id}
-        className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl"
+        className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
       >
-        {title}
+        <Emph text={title} />
       </h2>
     </Reveal>
   );

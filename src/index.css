@@ -3,51 +3,57 @@
 @tailwind utilities;
 
 :root {
-  --ground: 8 12 24;
-  --deep: 11 17 32;
-  --surface: 17 24 43;
-  --surface2: 24 33 58;
-  --line: 36 48 78;
-  --ink: 234 240 255;
-  --muted: 148 163 192;
-  --accent: 76 141 255;
+  --ground: 5 8 10;
+  --deep: 9 14 17;
+  --surface: 12 18 22;
+  --surface2: 18 27 32;
+  --line: 30 48 44;
+  --ink: 221 235 228;
+  --muted: 132 150 142;
+  --accent: 57 255 136;
   --accent2: 34 211 238;
-  --onaccent: 8 12 24;
+  --onaccent: 3 10 6;
   color-scheme: dark;
 }
-
-:root[data-theme="light"] {
-  --ground: 246 248 252;
-  --deep: 238 242 249;
-  --surface: 255 255 255;
-  --surface2: 241 245 251;
-  --line: 214 222 237;
-  --ink: 13 20 38;
-  --muted: 84 98 125;
-  --accent: 37 99 235;
-  --accent2: 8 145 178;
-  --onaccent: 255 255 255;
-  color-scheme: light;
+:root[data-accent="cyan"] {
+  --accent: 34 211 238;
+  --accent2: 129 140 248;
+  --line: 28 44 52;
+}
+:root[data-accent="amber"] {
+  --accent: 255 176 0;
+  --accent2: 255 115 70;
+  --line: 48 42 28;
+}
+:root[data-accent="pink"] {
+  --accent: 255 79 160;
+  --accent2: 167 139 250;
+  --line: 48 30 44;
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
+  background: rgb(var(--ground));
 }
-
 body {
-  @apply bg-ground font-body text-ink antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  overflow-x: clip;
+  background: rgb(var(--ground));
+  color: rgb(var(--ink));
+  font-family: "Space Grotesk", "Hind Siliguri", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
-
-/* Bangla reads better with normal letter-spacing and a little more line height. */
+html[lang="bn"] body {
+  line-height: 1.75;
+}
 html[lang="bn"] h1,
 html[lang="bn"] h2,
 html[lang="bn"] h3 {
   letter-spacing: 0;
 }
-html[lang="bn"] body {
-  line-height: 1.75;
+html[lang="bn"] em {
+  font-style: normal;
 }
 
 :focus-visible {
@@ -55,47 +61,167 @@ html[lang="bn"] body {
   outline-offset: 3px;
   border-radius: 6px;
 }
-
 ::selection {
   background: rgb(var(--accent) / 0.35);
+  color: rgb(var(--ink));
 }
 
 @layer components {
   .container-x {
-    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 72rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .container-x {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
   .btn {
-    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full px-7 py-3 text-base font-semibold transition duration-200 hover:-translate-y-0.5;
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    padding: 0.75rem 1.5rem;
+    font-family: "JetBrains Mono", "Hind Siliguri", ui-monospace, monospace;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
   }
   .btn-primary {
-    @apply bg-accent text-onaccent shadow-lg shadow-accent/20 hover:shadow-accent/40;
+    background: rgb(var(--accent));
+    color: rgb(var(--onaccent));
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 28px rgb(var(--accent) / 0.45);
   }
   .btn-ghost {
-    @apply border border-line text-ink hover:border-accent hover:text-accent;
+    border: 1px solid rgb(var(--line));
+    color: rgb(var(--ink));
   }
-  .card {
-    @apply rounded-3xl border border-line bg-surface;
-  }
-  .eyebrow {
-    @apply text-sm font-semibold uppercase tracking-[0.14em] text-accent;
+  .btn-ghost:hover {
+    border-color: rgb(var(--accent));
+    color: rgb(var(--accent));
   }
   .glass {
-    background: rgb(var(--surface) / 0.7);
+    background: rgb(var(--surface) / 0.8);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
 }
 
-@keyframes drift-a {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, 30px) scale(1.08); }
+/* ---------- CRT overlay: faint scanlines + vignette ---------- */
+.crt {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.16) 0, rgb(0 0 0 / 0.16) 1px, transparent 1px, transparent 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.45) 100%);
+  opacity: 0.28;
 }
-@keyframes drift-b {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-36px, -26px) scale(1.1); }
+.scanlines {
+  background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.28) 0, rgb(0 0 0 / 0.28) 1px, transparent 1px, transparent 3px);
 }
-.blob-a { animation: drift-a 14s ease-in-out infinite; }
-.blob-b { animation: drift-b 17s ease-in-out infinite; }
+.grid-bg {
+  background-image:
+    linear-gradient(rgb(var(--line) / 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--line) / 0.6) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ---------- Hero cursor glow ---------- */
+.hero-glow {
+  background: radial-gradient(520px circle at var(--mx, 72%) var(--my, 28%), rgb(var(--accent) / 0.1), transparent 60%);
+}
+
+/* ---------- Glitch (short burst every few seconds, stronger on hover) ---------- */
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.glitch::before {
+  color: rgb(var(--accent2));
+  animation: glitch-a 7s steps(1) infinite;
+}
+.glitch::after {
+  color: #ff3d71;
+  animation: glitch-a 7s steps(1) infinite 0.18s;
+}
+.glitch:hover::before,
+.glitch:hover::after {
+  animation-duration: 1.1s;
+}
+@keyframes glitch-a {
+  0%, 90%, 100% { opacity: 0; transform: none; clip-path: inset(0 0 0 0); }
+  91% { opacity: 0.85; transform: translate(-3px, 1px); clip-path: inset(8% 0 62% 0); }
+  93% { opacity: 0.85; transform: translate(3px, -1px); clip-path: inset(55% 0 14% 0); }
+  95% { opacity: 0.85; transform: translate(-2px, 0); clip-path: inset(30% 0 40% 0); }
+  97% { opacity: 0; }
+}
+
+/* ---------- Typewriter caret ---------- */
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: rgb(var(--accent));
+  animation: blink 1s steps(1) infinite;
+}
+.caret-hide {
+  display: none;
+}
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---------- Photo scan sweep ---------- */
+.scan-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 32%;
+  background: linear-gradient(to bottom, transparent, rgb(var(--accent) / 0.16), transparent);
+  animation: sweep 5s linear infinite;
+  pointer-events: none;
+}
+@keyframes sweep {
+  from { transform: translateY(-120%); }
+  to { transform: translateY(420%); }
+}
+
+/* ---------- Marquee ---------- */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -104,4 +230,5 @@ html[lang="bn"] body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .glitch::before, .glitch::after, .scan-sweep { display: none; }
 }

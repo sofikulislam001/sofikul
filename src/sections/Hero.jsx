@@ -1,81 +1,76 @@
-import { motion } from "framer-motion";
-import { ArrowRight, Download } from "lucide-react";
+import { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Download, Terminal as TerminalIcon } from "lucide-react";
 import { profile, stats } from "../data/content.js";
 import { useLang } from "../i18n.jsx";
+import Emph from "../components/Emph.jsx";
+import Typewriter from "../components/Typewriter.jsx";
 import SocialLinks from "../components/SocialLinks.jsx";
 
-const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
-const word = {
-  hidden: { y: "110%" },
-  show: { y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-};
-
-export default function Hero() {
+export default function Hero({ active }) {
   const { ui, tx } = useLang();
+  const reduce = useReducedMotion();
+  const ref = useRef(null);
+
+  // Soft glow that follows the pointer (skipped for reduced motion).
+  const onMove = (e) => {
+    if (reduce || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    ref.current.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    ref.current.style.setProperty("--my", `${e.clientY - r.top}px`);
+  };
+
   const greeting = ui.greeting(profile.firstName);
-  const words = greeting.split(" ");
+  const reveal = (delay) => ({
+    initial: { opacity: 0, y: 14 },
+    animate: active ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 },
+    transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
+  });
 
   return (
-    <section id="home" className="relative overflow-hidden pb-20 pt-32 sm:pt-40">
-      {/* soft moving background shapes */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="blob-a absolute -left-24 top-10 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
-        <div className="blob-b absolute -right-20 top-40 h-80 w-80 rounded-full bg-accent2/20 blur-3xl" />
-      </div>
-
-      <div className="container-x grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
+    <section
+      id="home"
+      ref={ref}
+      onPointerMove={onMove}
+      className="hero-glow relative overflow-hidden pb-24 pt-32 sm:pt-40"
+    >
+      <div className="container-x grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="flex flex-col gap-7">
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="eyebrow"
-          >
-            {tx(profile.role)}
-          </motion.p>
+          <p className="font-mono text-sm text-muted sm:text-base">
+            <span className="text-accent">{profile.handle}@portfolio</span>
+            <span>:</span>
+            <span className="text-accent2">~</span>
+            <span>$ </span>
+            <Typewriter text="whoami" start={active} delay={250} speed={80} />
+          </p>
 
-          {/* key makes the headline replay when the language changes */}
           <motion.h1
-            key={greeting}
-            variants={container}
-            initial="hidden"
-            animate="show"
-            aria-label={greeting}
-            className="font-display text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl"
+            {...reveal(0.15)}
+            data-text={greeting.replace(/\*/g, "")}
+            className="glitch font-display text-5xl font-bold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl"
           >
-            {words.map((w, i) => (
-              <span key={i} className="mr-[0.25em] inline-block overflow-hidden pb-2 align-bottom" aria-hidden="true">
-                <motion.span variants={word} className="inline-block">
-                  {i === words.length - 1 ? (
-                    <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">
-                      {w}
-                    </span>
-                  ) : (
-                    w
-                  )}
-                </motion.span>
-              </span>
-            ))}
+            <Emph text={greeting} />
           </motion.h1>
 
+          <p className="font-mono text-lg text-accent sm:text-xl">
+            <span aria-hidden="true">&gt; </span>
+            <Typewriter text={tx(profile.role)} start={active} delay={900} speed={36} keepCaret />
+          </p>
+
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
+            {...reveal(0.45)}
             className="max-w-xl text-lg leading-relaxed text-muted sm:text-xl"
           >
             {tx(profile.intro)}
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex flex-col gap-4"
-          >
+          <motion.div {...reveal(0.6)} className="flex flex-col gap-5">
             <div className="flex flex-wrap gap-4">
               <a href="#projects" className="btn btn-primary">
                 {ui.viewProjects} <ArrowRight size={18} aria-hidden="true" />
+              </a>
+              <a href="#terminal" className="btn btn-ghost">
+                <TerminalIcon size={18} aria-hidden="true" /> {ui.tryTerminal}
               </a>
               <a href="#contact" className="btn btn-ghost">
                 {ui.contactMe}
@@ -102,31 +97,36 @@ export default function Hero() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="mx-auto w-full max-w-sm"
         >
-          <div className="relative">
-            <div
-              aria-hidden="true"
-              className="absolute -inset-3 rounded-[11rem_11rem_2.5rem_2.5rem] bg-gradient-to-b from-accent/40 to-accent2/20 blur-xl"
-            />
-            <div className="card relative aspect-[4/5] overflow-hidden rounded-[11rem_11rem_2rem_2rem] bg-surface2">
+          <div className="relative p-3">
+            {/* corner brackets */}
+            <span aria-hidden="true" className="absolute left-0 top-0 h-6 w-6 border-l-2 border-t-2 border-accent" />
+            <span aria-hidden="true" className="absolute right-0 top-0 h-6 w-6 border-r-2 border-t-2 border-accent" />
+            <span aria-hidden="true" className="absolute bottom-0 left-0 h-6 w-6 border-b-2 border-l-2 border-accent" />
+            <span aria-hidden="true" className="absolute bottom-0 right-0 h-6 w-6 border-b-2 border-r-2 border-accent" />
+
+            <div className="relative aspect-[4/5] overflow-hidden rounded-md border border-line bg-surface2">
               <img
                 src={profile.photo}
                 alt={ui.portrait(profile.name)}
                 width="598"
                 height="598"
-                className="h-full w-full object-cover object-top"
+                className="h-full w-full object-cover object-top grayscale-[0.8] contrast-110 transition duration-500 hover:grayscale-0"
                 onError={(e) => {
                   if (!e.currentTarget.src.endsWith(profile.photoPlaceholder)) {
                     e.currentTarget.src = profile.photoPlaceholder;
                   }
                 }}
               />
+              <div aria-hidden="true" className="scanlines pointer-events-none absolute inset-0" />
+              <div aria-hidden="true" className="scan-sweep" />
             </div>
           </div>
+          <p className="mt-3 text-center font-mono text-xs text-muted">// {profile.name}</p>
         </motion.div>
       </div>
     </section>

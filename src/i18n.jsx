@@ -14,31 +14,34 @@ function initialLang() {
 }
 
 export function LangProvider({ children }) {
-  const [lang, setLang] = useState(initialLang);
+  const [lang, setLangState] = useState(initialLang);
 
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const toggle = useCallback(() => {
-    const next = lang === "en" ? "bn" : "en";
+  const setLang = useCallback((next) => {
+    if (next !== "en" && next !== "bn") return;
     try {
       localStorage.setItem("lang", next);
     } catch {
       /* ignore */
     }
-    setLang(next);
-  }, [lang]);
+    setLangState(next);
+  }, []);
+
+  const toggle = useCallback(() => setLang(lang === "en" ? "bn" : "en"), [lang, setLang]);
 
   const value = useMemo(
     () => ({
       lang,
       toggle,
+      setLang,
       ui: ui[lang],
       // Picks the right language from { en, bn } content; plain strings pass through.
       tx: (v) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] ?? v.en : v),
     }),
-    [lang, toggle]
+    [lang, toggle, setLang]
   );
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;

@@ -1,19 +1,23 @@
 # Sofikul Islam - Portfolio Website
 
-React + Vite + Tailwind CSS + Framer Motion দিয়ে তৈরি একটি আধুনিক, অ্যানিমেটেড পার্সোনাল পোর্টফোলিও।
+React + Vite + Tailwind CSS + Framer Motion দিয়ে তৈরি একটি হ্যাকার-স্টাইল, অ্যানিমেটেড পার্সোনাল পোর্টফোলিও।
 
 > **নোট:** ছবি, ইমেইল, Facebook/GitHub লিংক, bio, skill ও ২টি প্রজেক্ট (Lost & Found Bangladesh, এই পোর্টফোলিও) বসানো আছে। আরও তথ্য কোথায় বসাবেন তা জানতে [ASSET-GUIDE.md](./ASSET-GUIDE.md) পড়ুন।
 
 ## কী কী আছে
 
-- Sticky navbar (স্ক্রল করলে স্টাইল বদলায়, বর্তমান সেকশন হাইলাইট হয়, মোবাইল মেনু আছে)
-- Dark / Light থিম টগল (আপনার পছন্দ মনে রাখে)
+- **Boot ইন্ট্রো:** সাইট খুললে ০ থেকে ১০০% লোডিং কাউন্টার ও boot লগ (প্রতি সেশনে একবার)। `Esc` বা বাটনে বাদ দেওয়া যায়
+- **Matrix rain** ব্যাকগ্রাউন্ড (ফুটারের বাটন বা টার্মিনালের `rain off` দিয়ে বন্ধ করা যায়)
+- **Glitch** হেডলাইন, typewriter লেখা, scanline ও CRT ভাব, ছবিতে স্ক্যান ইফেক্ট, স্ক্রল প্রগ্রেস বার
+- **কাজ-করা টার্মিনাল:** ভিজিটর `help`, `whoami`, `about`, `skills`, `projects`, `contact`, `ls`, `cat secret.txt`, `lang bn`, `accent cyan`, `rain off` ইত্যাদি লিখতে পারে (মোবাইলের জন্য বাটনও আছে)
+- **Accent রং বদল:** নেভবারের রঙের বাটনে green → cyan → amber → pink (পছন্দ মনে রাখে)
 - English / বাংলা ভাষা টগল (পুরো সাইট দুই ভাষায়, পছন্দ মনে রাখে)
-- Hero সেকশন: অ্যানিমেটেড হেডলাইন, নরম নড়াচড়া করা ব্যাকগ্রাউন্ড, প্রোফাইল ছবি
-- About, Skills, Featured Projects (ক্যাটাগরি ফিল্টারসহ), Contact, Footer
+- Sticky navbar (বর্তমান সেকশন হাইলাইট হয়, মোবাইল মেনু আছে)
+- Hero, স্কিল স্ক্রলিং স্ট্রিপ, About, Skills, Featured Projects (ক্যাটাগরি ফিল্টারসহ), টার্মিনাল, FAQ (অ্যাকর্ডিয়ন), Contact, Footer
 - Services, Experience, সংখ্যা/অর্জন: আপনি তথ্য দিলে তবেই দেখাবে, নাহলে লুকানো থাকবে
-- `prefers-reduced-motion` মেনে চলে (যাদের অ্যানিমেশন বন্ধ করা আছে তাদের জন্য কম নড়াচড়া)
+- `prefers-reduced-motion` মেনে চলে: boot ইন্ট্রো, matrix rain ও গ্লিচ বন্ধ থাকে
 - কীবোর্ড দিয়ে চালানো যায়, ফোকাস দেখা যায়, "Skip to content" লিংক আছে
+- **নোট:** আগের Dark/Light থিম টগল বাদ দিয়ে এখন সবসময় ডার্ক হ্যাকার থিম, সাথে রং বদলের সুবিধা
 
 ## কী কী নেই (সৎভাবে)
 
@@ -115,9 +119,10 @@ sofikul/
     favicon.svg    <- ব্রাউজার ট্যাবের আইকন
   src/
     data/content.js  <- আপনার সব তথ্য (এটাই বদলাবেন)
-    sections/        <- Hero, About, Skills, Projects, Contact ...
-    components/      <- Navbar, Logo, ThemeToggle ...
-    index.css        <- রং ও থিম
+    data/ui.js       <- বাটন/লেবেলের লেখা (দুই ভাষায়)
+    sections/        <- Hero, About, Skills, Projects, FAQ, Contact ...
+    components/      <- Navbar, Terminal, BootScreen, MatrixRain ...
+    index.css        <- রং (accent), গ্লিচ, স্ক্যানলাইন
   archive/old-index.html  <- রিপোজিটরির আগের পুরোনো ফাইল (মোছা হয়নি)
   ASSET-GUIDE.md
 ```
@@ -125,7 +130,8 @@ sofikul/
 ## কেন এই প্রযুক্তি
 
 - **React + Vite:** দ্রুত চালু হয়, সেটআপ সহজ, নতুনদের জন্য ভালো।
-- **Tailwind CSS:** সব রং ও থিম এক জায়গায় থাকে, লাইট/ডার্ক সহজে বদলায়।
-- **Framer Motion:** স্ক্রল-রিভিল ও মেনু অ্যানিমেশন, reduced-motion সমর্থনসহ।
+- **Tailwind CSS:** সব রং `src/index.css` এর ওপরে CSS ভ্যারিয়েবলে থাকে, রং বদলানো সহজ।
+- **Framer Motion:** স্ক্রল-রিভিল, boot স্ক্রিন ও মেনু অ্যানিমেশন, reduced-motion সমর্থনসহ।
+- **Canvas (matrix rain):** আলাদা লাইব্রেরি ছাড়াই, ট্যাব লুকানো থাকলে থেমে যায়।
 - **Lucide:** হালকা ও একই ধরনের আইকন।
 - **JavaScript (TypeScript নয়):** শুরুতে সেটআপ কম জটিল রাখতে।

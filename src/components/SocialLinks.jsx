@@ -23,7 +23,7 @@ export default function SocialLinks({ className = "" }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.label}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-muted transition hover:-translate-y-0.5 hover:border-accent hover:text-accent"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border border-line text-muted transition hover:-translate-y-0.5 hover:border-accent hover:text-accent"
             >
               <Icon size={20} aria-hidden="true" />
             </a>

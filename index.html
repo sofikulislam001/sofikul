@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-accent="green">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,7 @@
       name="description"
       content="Personal portfolio of Sofikul Islam. Explore projects, skills and get in touch."
     />
-    <meta name="theme-color" content="#080C18" />
+    <meta name="theme-color" content="#05080A" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Sofikul Islam | Portfolio" />
     <meta
@@ -19,15 +19,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script>
-      // Apply the saved theme before first paint to avoid a flash.
+      // Apply the saved accent color before first paint to avoid a flash.
       try {
-        var t = localStorage.getItem("theme");
-        if (t === "light" || t === "dark") {
-          document.documentElement.setAttribute("data-theme", t);
+        var a = localStorage.getItem("accent");
+        if (a === "green" || a === "cyan" || a === "amber" || a === "pink") {
+          document.documentElement.setAttribute("data-accent", a);
         }
       } catch (e) {}
     </script>

@@ -11,6 +11,7 @@ export const profile = {
   name: "Sofikul Islam", // নামের বানান ঠিক আছে কিনা দেখে নিন
   firstName: "Sofikul",
   initials: "SI",
+  handle: "sofikul", // টার্মিনালের প্রম্পটে দেখায়: sofikul@portfolio
 
   role: {
     en: "Web Developer & Digital Creator",
@@ -109,8 +110,8 @@ export const projects = [
   {
     title: { en: "This Portfolio", bn: "এই পোর্টফোলিও" },
     summary: {
-      en: "A bilingual, animated personal portfolio with dark and light themes, built with React, Vite, Tailwind CSS and Framer Motion.",
-      bn: "ডার্ক ও লাইট থিমসহ দুই ভাষার অ্যানিমেটেড পার্সোনাল পোর্টফোলিও, React, Vite, Tailwind CSS ও Framer Motion দিয়ে বানানো।",
+      en: "A bilingual, hacker-style personal portfolio with a boot intro, matrix background, glitch effects and a working terminal, built with React, Vite, Tailwind CSS and Framer Motion.",
+      bn: "দুই ভাষার হ্যাকার-স্টাইল পার্সোনাল পোর্টফোলিও। আছে বুট ইন্ট্রো, ম্যাট্রিক্স ব্যাকগ্রাউন্ড, গ্লিচ ইফেক্ট ও কাজ-করা টার্মিনাল। React, Vite, Tailwind CSS ও Framer Motion দিয়ে বানানো।",
     },
     category: { en: "Web", bn: "ওয়েব" },
     tags: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
@@ -127,3 +128,35 @@ export const experience = [];
 // সংখ্যা/অর্জন: যাচাই করা সত্যি তথ্য থাকলেই দিন।
 // উদাহরণ: { value: "10+", label: { en: "Projects", bn: "প্রজেক্ট" } }
 export const stats = [];
+
+// FAQ (প্রশ্নোত্তর)। শুধু সত্যি তথ্য লিখুন। খালি ([]) থাকলে সেকশন লুকানো থাকবে।
+export const faq = [
+  {
+    q: { en: "What do you build?", bn: "আপনি কী বানান?" },
+    a: {
+      en: "Websites and web apps. One example is Lost & Found Bangladesh, a platform with accounts, photo uploads, smart matching and an admin dashboard, built with Next.js, TypeScript and Supabase.",
+      bn: "ওয়েবসাইট ও ওয়েব অ্যাপ। একটি উদাহরণ Lost & Found Bangladesh। Next.js, TypeScript ও Supabase দিয়ে বানানো এই প্ল্যাটফর্মে আছে অ্যাকাউন্ট, ছবি আপলোড, স্মার্ট ম্যাচিং ও অ্যাডমিন ড্যাশবোর্ড।",
+    },
+  },
+  {
+    q: { en: "Which technologies do you use?", bn: "কোন কোন টেকনোলজি ব্যবহার করেন?" },
+    a: {
+      en: "React, Next.js, TypeScript, Tailwind CSS and Framer Motion on the frontend, and Supabase (PostgreSQL, authentication and file storage) on the backend.",
+      bn: "ফ্রন্টএন্ডে React, Next.js, TypeScript, Tailwind CSS ও Framer Motion, আর ব্যাকএন্ডে Supabase (PostgreSQL, অথেনটিকেশন ও ফাইল স্টোরেজ)।",
+    },
+  },
+  {
+    q: { en: "Can I see your code?", bn: "আপনার কোড কি দেখা যাবে?" },
+    a: {
+      en: "Yes. My public projects are on GitHub. Use the GitHub link on this page.",
+      bn: "হ্যাঁ। আমার পাবলিক প্রজেক্টগুলো GitHub-এ আছে। এই পেজের GitHub লিংকে যান।",
+    },
+  },
+  {
+    q: { en: "How can I contact you?", bn: "কীভাবে যোগাযোগ করব?" },
+    a: {
+      en: "Use the contact form below, email me, or send a message on Facebook. The links are in the contact section.",
+      bn: "নিচের যোগাযোগ ফর্ম ব্যবহার করুন, ইমেইল করুন, অথবা Facebook-এ মেসেজ দিন। লিংকগুলো যোগাযোগ সেকশনে আছে।",
+    },
+  },
+];

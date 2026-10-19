@@ -2,17 +2,16 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Logo from "./Logo.jsx";
-import ThemeToggle from "./ThemeToggle.jsx";
 import LangToggle from "./LangToggle.jsx";
+import AccentToggle from "./AccentToggle.jsx";
 import { useLang } from "../i18n.jsx";
 
-export default function Navbar({ items, theme, onToggleTheme }) {
+export default function Navbar({ items }) {
   const { ui } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
 
-  // Style change after scrolling a little.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
@@ -38,16 +37,15 @@ export default function Navbar({ items, theme, onToggleTheme }) {
     return () => observer.disconnect();
   }, [items]);
 
-  // Close the mobile menu with Escape.
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
     const onKey = (e) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
   const linkClass = (id) =>
-    `rounded-full px-4 py-2 text-[15px] font-medium transition ${
+    `rounded-lg px-3 py-2 font-mono text-sm transition ${
       active === id ? "text-accent" : "text-muted hover:text-ink"
     }`;
 
@@ -60,7 +58,7 @@ export default function Navbar({ items, theme, onToggleTheme }) {
       <nav className="container-x flex items-center justify-between gap-4" aria-label={ui.mainNav}>
         <Logo />
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {items.map((i) => (
             <li key={i.id}>
               <a
@@ -68,21 +66,22 @@ export default function Navbar({ items, theme, onToggleTheme }) {
                 className={linkClass(i.id)}
                 aria-current={active === i.id ? "true" : undefined}
               >
+                {active === i.id ? "> " : ""}
                 {ui.nav[i.id]}
               </a>
             </li>
           ))}
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <LangToggle />
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-          <a href="#contact" className="btn btn-primary hidden !min-h-[44px] !py-2 lg:inline-flex">
+          <AccentToggle />
+          <a href="#contact" className="btn btn-primary hidden !min-h-[44px] !py-2 xl:inline-flex">
             {ui.contactMe}
           </a>
           <button
             type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-line md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-line lg:hidden"
             aria-label={open ? ui.closeMenu : ui.openMenu}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -101,7 +100,7 @@ export default function Navbar({ items, theme, onToggleTheme }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.2 }}
-            className="glass container-x mt-3 rounded-3xl border border-line p-4 md:hidden"
+            className="glass container-x mt-3 rounded-2xl border border-line p-4 lg:hidden"
           >
             <ul className="flex flex-col">
               {items.map((i) => (
@@ -109,20 +108,17 @@ export default function Navbar({ items, theme, onToggleTheme }) {
                   <a
                     href={`#${i.id}`}
                     onClick={() => setOpen(false)}
-                    className={`block min-h-[48px] rounded-2xl px-4 py-3 text-lg font-medium ${
+                    className={`block min-h-[48px] rounded-lg px-4 py-3 font-mono text-lg ${
                       active === i.id ? "text-accent" : "text-ink"
                     }`}
                   >
+                    <span className="text-accent">$ </span>
                     {ui.nav[i.id]}
                   </a>
                 </li>
               ))}
             </ul>
-            <a
-              href="#contact"
-              onClick={() => setOpen(false)}
-              className="btn btn-primary mt-3 w-full"
-            >
+            <a href="#contact" onClick={() => setOpen(false)} className="btn btn-primary mt-3 w-full">
               {ui.contactMe}
             </a>
           </motion.div>
