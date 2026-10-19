@@ -4,6 +4,9 @@ import "lenis/dist/lenis.css";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import { experience, faq, github, projects, services, skills } from "./data/content.js";
 import { useLang } from "./i18n.jsx";
+import DhakaBackdrop from "./components/DhakaBackdrop.jsx";
+import Flashlight from "./components/Flashlight.jsx";
+import { startLightning } from "./fx.js";
 import Cursor from "./components/Cursor.jsx";
 import Konami from "./components/Konami.jsx";
 import { setLenis } from "./scroll.js";
@@ -80,6 +83,18 @@ export default function App() {
     };
   }, []);
 
+  // Occasional lightning over the skyline (off for reduced motion).
+  useEffect(() => {
+    let reduce = false;
+    try {
+      reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      /* ignore */
+    }
+    if (reduce || booting) return undefined;
+    return startLightning();
+  }, [booting]);
+
   // Freeze scrolling behind the boot intro.
   useEffect(() => {
     if (!lenisRef) return;
@@ -98,7 +113,9 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
+      <DhakaBackdrop />
       <MatrixRain />
+      <Flashlight />
       <Cursor />
       <Konami />
       <div aria-hidden="true" className="crt" />

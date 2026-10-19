@@ -3,6 +3,7 @@ import { about, contact, profile, projects, skills, socials } from "../data/cont
 import { useLang } from "../i18n.jsx";
 import { setAccent } from "../accent.js";
 import { setRain } from "../rain.js";
+import { setSound } from "../audio.js";
 import { scrollToId } from "../scroll.js";
 import Window from "./Window.jsx";
 
@@ -124,6 +125,16 @@ export default function Terminal() {
           setRain(false);
           text(t.rainOff);
         } else text(t.rainUsage, "err");
+      },
+      sound() {
+        const v = arg.toLowerCase();
+        if (v === "on") {
+          setSound(true);
+          text(t.soundOn);
+        } else if (v === "off") {
+          setSound(false);
+          text(t.soundOff);
+        } else text(t.soundUsage, "err");
       },
       matrix() {
         setRain(true);

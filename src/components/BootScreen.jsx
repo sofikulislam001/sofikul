@@ -2,14 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "../i18n.jsx";
 import { profile } from "../data/content.js";
+import LogoMark from "./LogoMark.jsx";
+import { setSound } from "../audio.js";
 
-const DURATION = 2800;
+const DURATION = 3400;
 
 // Short "booting" intro. Can be skipped with the button, Esc, Enter or Space.
 export default function BootScreen({ onDone }) {
   const { ui } = useLang();
   const [pct, setPct] = useState(0);
+  const [ready, setReady] = useState(false);
   const doneRef = useRef(false);
+  const enter = (withSound) => {
+    if (withSound) setSound(true); // must run inside the click so the browser allows audio
+    finish();
+  };
 
   const finish = () => {
     if (doneRef.current) return;
@@ -33,7 +40,7 @@ export default function BootScreen({ onDone }) {
       const p = Math.min(1, (now - start) / DURATION);
       setPct(Math.round((1 - Math.pow(1 - p, 2.2)) * 100));
       if (p < 1) raf = requestAnimationFrame(tick);
-      else timer = setTimeout(finish, 350);
+      else setReady(true);
     };
     raf = requestAnimationFrame(tick);
     return () => {
@@ -45,7 +52,7 @@ export default function BootScreen({ onDone }) {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") finish();
+      if (e.key === "Escape") finish();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -86,6 +93,7 @@ export default function BootScreen({ onDone }) {
           ))}
         </ul>
         <div>
+          <LogoMark className="boot-logo mb-6 h-16 w-16 sm:h-20 sm:w-20" />
           <p className="font-display text-7xl font-bold tabular-nums text-ink sm:text-9xl">
             {String(pct).padStart(3, "0")}
             <span className="text-accent">%</span>
@@ -93,6 +101,23 @@ export default function BootScreen({ onDone }) {
           <div className="mt-4 h-1 w-full overflow-hidden rounded bg-line">
             <div className="h-full bg-accent" style={{ width: `${pct}%` }} />
           </div>
+          {ready && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 flex flex-col gap-4"
+            >
+              <div className="flex flex-wrap gap-4">
+                <button type="button" onClick={() => enter(true)} className="btn btn-primary">
+                  [ {ui.enterSound} ]
+                </button>
+                <button type="button" onClick={() => enter(false)} className="btn btn-ghost">
+                  {ui.enterSilent}
+                </button>
+              </div>
+              <p className="text-xs text-muted">{ui.bootHint}</p>
+            </motion.div>
+          )}
         </div>
       </div>
 

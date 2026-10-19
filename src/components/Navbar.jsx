@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import Logo from "./Logo.jsx";
 import LangToggle from "./LangToggle.jsx";
 import AccentToggle from "./AccentToggle.jsx";
+import SoundToggle from "./SoundToggle.jsx";
 import { useLang } from "../i18n.jsx";
 
 export default function Navbar({ items }) {
@@ -75,6 +76,7 @@ export default function Navbar({ items }) {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <LangToggle />
+          <SoundToggle />
           <AccentToggle />
           <a href="#contact" className="btn btn-primary hidden !min-h-[44px] !py-2 xl:inline-flex">
             {ui.contactMe}

@@ -1,6 +1,6 @@
 import { createStore } from "./store.js";
 
-export const ACCENTS = ["green", "cyan", "amber", "pink"];
+export const ACCENTS = ["blood", "green", "cyan", "amber", "pink"];
 
 function initial() {
   try {
@@ -9,7 +9,7 @@ function initial() {
   } catch {
     /* storage can be unavailable; use the default */
   }
-  return "green";
+  return "blood";
 }
 
 const store = createStore(initial(), (name) => {
