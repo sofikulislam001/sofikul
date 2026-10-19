@@ -103,6 +103,7 @@ export const projects = [
     },
     category: { en: "Web", bn: "ওয়েব" },
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Supabase"],
+    cover: "lostfound", // অ্যানিমেটেড কভার। নিজের স্ক্রিনশট দিলে (image) সেটাই দেখাবে
     image: "",
     live: "", // লাইভ লিংক থাকলে এখানে দিন
     source: "https://github.com/sofikulislam001/Lost-Found-Bangladesh-",
@@ -115,9 +116,69 @@ export const projects = [
     },
     category: { en: "Web", bn: "ওয়েব" },
     tags: ["React", "Vite", "Tailwind CSS", "Framer Motion"],
+    cover: "portfolio",
     image: "",
     live: "",
     source: "https://github.com/sofikulislam001/sofikul",
+  },
+
+  // ---- নিচের ৪টি ডেমো (নমুনা) প্রজেক্ট। সাইটে "Demo" ব্যাজসহ দেখায়। ----
+  // নিজের আসল প্রজেক্ট হলে এগুলো বদলে দিন এবং `placeholder: true` লাইনটি মুছে দিন।
+  {
+    title: "Task Orbit",
+    summary: {
+      en: "Demo project: a kanban-style task board concept with smooth card movement between columns.",
+      bn: "ডেমো প্রজেক্ট: কলামের মধ্যে মসৃণভাবে কার্ড সরানো যায় এমন কানবান-স্টাইল টাস্ক বোর্ডের ধারণা।",
+    },
+    category: { en: "App", bn: "অ্যাপ" },
+    tags: ["React", "Framer Motion", "Tailwind CSS"],
+    cover: "taskboard",
+    image: "",
+    live: "",
+    source: "",
+    placeholder: true,
+  },
+  {
+    title: "Pulse Dashboard",
+    summary: {
+      en: "Demo project: an analytics dashboard concept with animated charts and clean widgets.",
+      bn: "ডেমো প্রজেক্ট: অ্যানিমেটেড চার্ট ও পরিচ্ছন্ন উইজেটসহ অ্যানালিটিক্স ড্যাশবোর্ডের ধারণা।",
+    },
+    category: { en: "Data", bn: "ডেটা" },
+    tags: ["React", "Charts", "Tailwind CSS"],
+    cover: "dashboard",
+    image: "",
+    live: "",
+    source: "",
+    placeholder: true,
+  },
+  {
+    title: "Cipher Chat",
+    summary: {
+      en: "Demo project: a private chat app concept with message threads and typing indicators.",
+      bn: "ডেমো প্রজেক্ট: মেসেজ থ্রেড ও টাইপিং ইন্ডিকেটরসহ প্রাইভেট চ্যাট অ্যাপের ধারণা।",
+    },
+    category: { en: "App", bn: "অ্যাপ" },
+    tags: ["React", "Supabase", "Realtime"],
+    cover: "chat",
+    image: "",
+    live: "",
+    source: "",
+    placeholder: true,
+  },
+  {
+    title: "Signal Radar",
+    summary: {
+      en: "Demo project: a radar-style map concept that sweeps an area and highlights points of interest.",
+      bn: "ডেমো প্রজেক্ট: রাডারের মতো এলাকা স্ক্যান করে গুরুত্বপূর্ণ জায়গা হাইলাইট করার ম্যাপ ধারণা।",
+    },
+    category: { en: "Data", bn: "ডেটা" },
+    tags: ["JavaScript", "Canvas", "API"],
+    cover: "radar",
+    image: "",
+    live: "",
+    source: "",
+    placeholder: true,
   },
 ];
 
@@ -160,3 +221,13 @@ export const faq = [
     },
   },
 ];
+
+// GitHub লাইভ ফিড: আপনার পাবলিক রিপোজিটরি GitHub থেকে নিজে থেকে এনে দেখায়।
+// - user: খালি ("") রাখলে সেকশন লুকানো থাকবে
+// - hide: যেসব রিপোর নাম দেখাতে চান না (বড়/ছোট হাতের অক্ষর কোনো ব্যাপার না)
+// - max: সর্বোচ্চ কয়টি রিপো দেখাবে
+export const github = {
+  user: "sofikulislam001",
+  max: 6,
+  hide: ["fdfgs", "Lost-Found-Bangladesh"],
+};

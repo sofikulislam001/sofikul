@@ -1,16 +1,20 @@
 import { useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Download, Terminal as TerminalIcon } from "lucide-react";
 import { profile, stats } from "../data/content.js";
 import { useLang } from "../i18n.jsx";
 import Emph from "../components/Emph.jsx";
 import Typewriter from "../components/Typewriter.jsx";
 import SocialLinks from "../components/SocialLinks.jsx";
+import Magnetic from "../components/Magnetic.jsx";
 
 export default function Hero({ active }) {
   const { ui, tx } = useLang();
   const reduce = useReducedMotion();
   const ref = useRef(null);
+  const { scrollY } = useScroll();
+  const textY = useTransform(scrollY, [0, 600], [0, reduce ? 0 : -60]);
+  const photoY = useTransform(scrollY, [0, 600], [0, reduce ? 0 : 80]);
 
   // Soft glow that follows the pointer (skipped for reduced motion).
   const onMove = (e) => {
@@ -35,7 +39,7 @@ export default function Hero({ active }) {
       className="hero-glow relative overflow-hidden pb-24 pt-32 sm:pt-40"
     >
       <div className="container-x grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="flex flex-col gap-7">
+        <motion.div style={{ y: textY }} className="flex flex-col gap-7">
           <p className="font-mono text-sm text-muted sm:text-base">
             <span className="text-accent">{profile.handle}@portfolio</span>
             <span>:</span>
@@ -66,9 +70,11 @@ export default function Hero({ active }) {
 
           <motion.div {...reveal(0.6)} className="flex flex-col gap-5">
             <div className="flex flex-wrap gap-4">
-              <a href="#projects" className="btn btn-primary">
-                {ui.viewProjects} <ArrowRight size={18} aria-hidden="true" />
-              </a>
+              <Magnetic>
+                <a href="#projects" className="btn btn-primary">
+                  {ui.viewProjects} <ArrowRight size={18} aria-hidden="true" />
+                </a>
+              </Magnetic>
               <a href="#terminal" className="btn btn-ghost">
                 <TerminalIcon size={18} aria-hidden="true" /> {ui.tryTerminal}
               </a>
@@ -94,9 +100,10 @@ export default function Hero({ active }) {
               ))}
             </dl>
           )}
-        </div>
+        </motion.div>
 
         <motion.div
+          style={{ y: photoY }}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}

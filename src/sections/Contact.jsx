@@ -51,7 +51,7 @@ export default function Contact() {
   return (
     <section id="contact" aria-labelledby="contact-title" className="py-24">
       <div className="container-x">
-        <SectionHeading index="06" eyebrow={ui.nav.contact} title={ui.contactTitle} id="contact-title" />
+        <SectionHeading index="07" eyebrow={ui.nav.contact} title={ui.contactTitle} id="contact-title" />
 
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal className="flex flex-col gap-6">

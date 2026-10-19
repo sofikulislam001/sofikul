@@ -3,9 +3,11 @@ import { about, contact, profile, projects, skills, socials } from "../data/cont
 import { useLang } from "../i18n.jsx";
 import { setAccent } from "../accent.js";
 import { setRain } from "../rain.js";
+import { scrollToId } from "../scroll.js";
 import Window from "./Window.jsx";
 
 const FILES = ["about.txt", "skills.txt", "projects.txt", "contact.txt", "secret.txt"];
+const GOTO = ["about", "skills", "projects", "github", "terminal", "faq", "contact"];
 const CHIPS = ["help", "about", "skills", "projects", "contact"];
 
 // A small working terminal. Every command reads from src/data/content.js,
@@ -127,6 +129,19 @@ export default function Terminal() {
         setRain(true);
         text(t.rainOn);
       },
+      goto() {
+        const id = arg.toLowerCase();
+        if (!GOTO.includes(id) || !document.getElementById(id)) {
+          text(t.gotoUsage, "err");
+          return;
+        }
+        text(t.gotoDone(id));
+        setTimeout(() => scrollToId(id), 300);
+      },
+      hire() {
+        text(t.hire);
+        setTimeout(() => scrollToId("contact"), 700);
+      },
       sudo() {
         text(t.sudo, "err");
       },
@@ -195,6 +210,7 @@ export default function Terminal() {
         <div
           ref={outRef}
           role="log"
+          data-lenis-prevent
           aria-label={t.outputLabel}
           tabIndex={0}
           className="h-[340px] overflow-y-auto pr-2 font-mono text-sm leading-relaxed"

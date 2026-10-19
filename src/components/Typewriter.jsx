@@ -1,15 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-
-// Split into visible characters so Bangla letters are not cut in half.
-function graphemes(text) {
-  if (typeof Intl !== "undefined" && Intl.Segmenter) {
-    return [...new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(text)].map(
-      (s) => s.segment
-    );
-  }
-  return Array.from(text);
-}
+import { graphemes } from "../lib/text.js";
 
 export default function Typewriter({
   text,

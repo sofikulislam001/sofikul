@@ -13,7 +13,7 @@ export default function Faq() {
   return (
     <section id="faq" aria-labelledby="faq-title" className="py-24">
       <div className="container-x">
-        <SectionHeading index="05" eyebrow={ui.nav.faq} title={ui.faqTitle} id="faq-title" />
+        <SectionHeading index="06" eyebrow={ui.nav.faq} title={ui.faqTitle} id="faq-title" />
         <Reveal className="max-w-3xl">
           <div className="divide-y divide-line rounded-xl border border-line bg-surface/85">
             {faq.map((f, i) => {

@@ -8,7 +8,7 @@ export default function TerminalSection() {
   return (
     <section id="terminal" aria-labelledby="terminal-title" className="py-24">
       <div className="container-x">
-        <SectionHeading index="04" eyebrow={ui.nav.terminal} title={ui.terminalTitle} id="terminal-title" />
+        <SectionHeading index="05" eyebrow={ui.nav.terminal} title={ui.terminalTitle} id="terminal-title" />
         <Reveal>
           <p className="mb-6 max-w-2xl font-mono text-sm text-muted">{ui.term.hint}</p>
           <Terminal />

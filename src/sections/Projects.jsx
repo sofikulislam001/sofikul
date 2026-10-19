@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { projects } from "../data/content.js";
 import { useLang } from "../i18n.jsx";
 import Reveal from "../components/Reveal.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
+import Cover from "../components/Cover.jsx";
 
 const en = (v) => (typeof v === "object" && v ? v.en : v);
 const slug = (v) =>
@@ -18,6 +19,26 @@ function ProjectCard({ project, index }) {
   const [imgFailed, setImgFailed] = useState(false);
   const showImage = project.image && !imgFailed;
   const title = tx(project.title);
+  const cardRef = useRef(null);
+
+  // 3D tilt + spotlight follow the mouse (CSS vars; skipped for touch/pen).
+  const onMove = (e) => {
+    const el = cardRef.current;
+    if (!el || e.pointerType !== "mouse") return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--mx", `${px * 100}%`);
+    el.style.setProperty("--my", `${py * 100}%`);
+    el.style.setProperty("--ry", `${(px - 0.5) * 8}deg`);
+    el.style.setProperty("--rx", `${(0.5 - py) * 6}deg`);
+  };
+  const onLeave = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
+  };
 
   return (
     <motion.li
@@ -26,8 +47,14 @@ function ProjectCard({ project, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.55, delay: (index % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group flex flex-col overflow-hidden rounded-xl border border-line bg-surface/85 transition duration-300 hover:-translate-y-1.5 hover:border-accent hover:shadow-[0_0_32px_rgb(var(--accent)/0.12)]"
+      className="flex"
     >
+      <div
+        ref={cardRef}
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        className="tilt spot group flex w-full flex-col overflow-hidden rounded-xl border border-line bg-surface/85 hover:border-accent hover:shadow-[0_0_32px_rgb(var(--accent)/0.12)]"
+      >
       <div className="border-b border-line bg-surface2/90 px-4 py-2.5 font-mono text-xs text-muted">
         ~/projects/{slug(project.title)}
       </div>
@@ -43,6 +70,10 @@ function ProjectCard({ project, index }) {
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
             onError={() => setImgFailed(true)}
           />
+        ) : project.cover ? (
+          <div className="h-full w-full transition duration-500 group-hover:scale-105">
+            <Cover name={project.cover} />
+          </div>
         ) : (
           <div
             aria-hidden="true"
@@ -54,7 +85,7 @@ function ProjectCard({ project, index }) {
         <div aria-hidden="true" className="scanlines pointer-events-none absolute inset-0" />
         {project.placeholder && (
           <span className="glass absolute left-4 top-4 rounded-md border border-line px-2.5 py-1 font-mono text-xs text-muted">
-            {ui.placeholder}
+            {ui.demo}
           </span>
         )}
       </div>
@@ -97,6 +128,7 @@ function ProjectCard({ project, index }) {
             )}
           </div>
         )}
+      </div>
       </div>
     </motion.li>
   );

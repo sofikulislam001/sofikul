@@ -232,3 +232,92 @@ html[lang="bn"] em {
   }
   .glitch::before, .glitch::after, .scan-sweep { display: none; }
 }
+
+/* ---------- Smooth scroll (Lenis) ---------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* ---------- Project cards: 3D tilt + cursor spotlight ---------- */
+.tilt {
+  transform: perspective(900px) translateY(var(--ty, 0px)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.18s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+.tilt:hover {
+  --ty: -6px;
+}
+.spot {
+  position: relative;
+}
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--accent) / 0.13), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.spot:hover::before {
+  opacity: 1;
+}
+
+/* ---------- Animated project covers ---------- */
+.cv * {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.cv-ping { animation: cv-ping 2.8s ease-out infinite; }
+.cv-scan { animation: cv-scan 9s ease-in-out infinite; }
+.cv-pulse { animation: cv-pulse 2.4s ease-in-out infinite; }
+.cv-blink { animation: cv-blink 1s steps(1) infinite; }
+.cv-move { animation: cv-move 7s ease-in-out infinite; }
+.cv-grow { animation: cv-grow 6s ease-in-out infinite; }
+.cv-draw { animation: cv-draw 6s ease-in-out infinite; }
+.cv-spin { animation: cv-spin 6s linear infinite; }
+.cv-bounce { animation: cv-bounce 1.1s ease-in-out infinite; }
+.cv-sweep { animation: cv-sweep 4.5s linear infinite; }
+.cv-blip { animation: cv-blip 4.5s ease-in-out infinite; }
+.cv-s1 { animation: cv-s1 9s ease infinite; }
+.cv-s2 { animation: cv-s2 9s ease infinite; }
+.cv-s3 { animation: cv-s3 9s ease infinite; }
+.cv-s4 { animation: cv-s4 9s ease infinite; }
+.cv-s5 { animation: cv-s5 9s ease infinite; }
+
+@keyframes cv-ping { 0% { transform: scale(0.4); opacity: 0.85; } 100% { transform: scale(3.4); opacity: 0; } }
+@keyframes cv-scan {
+  0%, 100% { transform: translate(0, 0); }
+  30% { transform: translate(120px, 28px); }
+  60% { transform: translate(40px, 66px); }
+}
+@keyframes cv-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+@keyframes cv-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes cv-move {
+  0%, 10% { transform: translate(0, 0); opacity: 1; }
+  40% { transform: translate(110px, 0); }
+  70%, 90% { transform: translate(220px, -36px); opacity: 1; }
+  100% { transform: translate(220px, -36px); opacity: 0; }
+}
+@keyframes cv-grow { 0% { transform: scaleY(0.08); } 40%, 85% { transform: scaleY(1); } 100% { transform: scaleY(0.08); } }
+@keyframes cv-draw { 0% { stroke-dashoffset: 420; } 45%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 420; } }
+@keyframes cv-spin { to { transform: rotate(360deg); } }
+@keyframes cv-bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+@keyframes cv-sweep { to { transform: rotate(360deg); } }
+@keyframes cv-blip { 0%, 100% { opacity: 0; transform: scale(0.6); } 15% { opacity: 1; transform: scale(1.3); } 50% { opacity: 0.2; } }
+@keyframes cv-s1 { 0%, 2% { opacity: 0; transform: translateY(8px); } 7%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+@keyframes cv-s2 { 0%, 20% { opacity: 0; transform: translateY(8px); } 25%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+@keyframes cv-s3 { 0%, 38% { opacity: 0; transform: translateY(8px); } 43%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+@keyframes cv-s4 { 0%, 56% { opacity: 0; transform: translateY(8px); } 61%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+@keyframes cv-s5 { 0%, 72% { opacity: 0; transform: translateY(8px); } 77%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt { transform: none !important; }
+  .cv *, .cv-ping, .cv-scan, .cv-pulse, .cv-blink, .cv-move, .cv-grow, .cv-draw, .cv-spin,
+  .cv-bounce, .cv-sweep, .cv-blip, .cv-s1, .cv-s2, .cv-s3, .cv-s4, .cv-s5 {
+    animation: none !important;
+  }
+}

@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 import { AnimatePresence, MotionConfig } from "framer-motion";
-import { experience, faq, projects, services, skills } from "./data/content.js";
+import { experience, faq, github, projects, services, skills } from "./data/content.js";
 import { useLang } from "./i18n.jsx";
+import Cursor from "./components/Cursor.jsx";
+import Konami from "./components/Konami.jsx";
+import { setLenis } from "./scroll.js";
 import BootScreen from "./components/BootScreen.jsx";
 import MatrixRain from "./components/MatrixRain.jsx";
 import Marquee from "./components/Marquee.jsx";
@@ -12,6 +17,7 @@ import About from "./sections/About.jsx";
 import Skills from "./sections/Skills.jsx";
 import Services from "./sections/Services.jsx";
 import Projects from "./sections/Projects.jsx";
+import GithubFeed from "./sections/GithubFeed.jsx";
 import TerminalSection from "./sections/TerminalSection.jsx";
 import Experience from "./sections/Experience.jsx";
 import Faq from "./sections/Faq.jsx";
@@ -24,6 +30,7 @@ const navItems = [
   { id: "skills", show: skills.length > 0 },
   { id: "services", show: services.length > 0 },
   { id: "projects", show: projects.length > 0 },
+  { id: "github", show: Boolean(github.user) },
   { id: "terminal", show: true },
   { id: "experience", show: experience.length > 0 },
   { id: "faq", show: faq.length > 0 },
@@ -43,9 +50,42 @@ function shouldBoot() {
   return true;
 }
 
+let lenisRef = null;
+
 export default function App() {
   const { ui } = useLang();
   const [booting, setBooting] = useState(shouldBoot);
+
+  // Smooth inertia scrolling (skipped for reduced-motion users).
+  useEffect(() => {
+    let reduce = false;
+    try {
+      reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      /* ignore */
+    }
+    if (reduce) return undefined;
+    const lenis = new Lenis({ duration: 1.15, smoothWheel: true, anchors: { offset: 0 } });
+    lenisRef = lenis;
+    setLenis(lenis);
+    let raf = requestAnimationFrame(function loop(t) {
+      lenis.raf(t);
+      raf = requestAnimationFrame(loop);
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      lenis.destroy();
+      lenisRef = null;
+      setLenis(null);
+    };
+  }, []);
+
+  // Freeze scrolling behind the boot intro.
+  useEffect(() => {
+    if (!lenisRef) return;
+    if (booting) lenisRef.stop();
+    else lenisRef.start();
+  }, [booting]);
 
   const finishBoot = () => {
     try {
@@ -59,6 +99,8 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <MatrixRain />
+      <Cursor />
+      <Konami />
       <div aria-hidden="true" className="crt" />
 
       <AnimatePresence>{booting && <BootScreen key="boot" onDone={finishBoot} />}</AnimatePresence>
@@ -79,6 +121,7 @@ export default function App() {
           {has("skills") && <Skills />}
           {has("services") && <Services />}
           {has("projects") && <Projects />}
+          {has("github") && <GithubFeed />}
           <TerminalSection />
           {has("experience") && <Experience />}
           {has("faq") && <Faq />}
