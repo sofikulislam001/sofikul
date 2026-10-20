@@ -4,6 +4,7 @@ import { useLang } from "../i18n.jsx";
 import { profile } from "../data/content.js";
 import LogoMark from "./LogoMark.jsx";
 import { setSound } from "../audio.js";
+import { setMode } from "../mode.js";
 
 const DURATION = 3400;
 
@@ -116,6 +117,16 @@ export default function BootScreen({ onDone }) {
                 </button>
               </div>
               <p className="text-xs text-muted">{ui.bootHint}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("classic");
+                  finish();
+                }}
+                className="self-start font-mono text-xs text-muted underline hover:text-accent"
+              >
+                {ui.classicView}
+              </button>
             </motion.div>
           )}
         </div>

@@ -5,6 +5,8 @@ import Logo from "./Logo.jsx";
 import LangToggle from "./LangToggle.jsx";
 import AccentToggle from "./AccentToggle.jsx";
 import SoundToggle from "./SoundToggle.jsx";
+import { Gamepad2 } from "lucide-react";
+import { setMode } from "../mode.js";
 import { useLang } from "../i18n.jsx";
 
 export default function Navbar({ items }) {
@@ -76,6 +78,15 @@ export default function Navbar({ items }) {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <LangToggle />
+          <button
+            type="button"
+            onClick={() => setMode("game")}
+            aria-label={ui.exploreFarm}
+            title={ui.exploreFarm}
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-line text-accent transition hover:border-accent"
+          >
+            <Gamepad2 size={20} aria-hidden="true" />
+          </button>
           <SoundToggle />
           <AccentToggle />
           <a href="#contact" className="btn btn-primary hidden !min-h-[44px] !py-2 xl:inline-flex">

@@ -106,6 +106,16 @@ function ambience() {
   nodes.push(wind);
   lfo(0.09, 260, bp.frequency);
 
+  // crickets: a high tone chopped fast, gated slowly
+  const cr = ctx.createOscillator();
+  cr.frequency.value = 4300;
+  const crGain = ctx.createGain();
+  crGain.gain.value = 0.006;
+  cr.connect(crGain).connect(master);
+  cr.start();
+  nodes.push(cr);
+  lfo(17, 0.006, crGain.gain);
+
   const rain = ctx.createBufferSource();
   rain.buffer = buf;
   rain.loop = true;
@@ -223,6 +233,7 @@ function start() {
       heartbeat();
       tm.creak = setTimeout(creak, rand(5000, 12000));
     }
+    if (gameOn) gameAudio(true);
   } catch {
     running = false;
   }
@@ -257,6 +268,156 @@ function stop() {
       }
     });
   }, 800);
+}
+
+/* ---------- game sound effects and music box (all synthesized) ---------- */
+function burst(freq, dur, vol, type = "lowpass") {
+  if (!running || !ctx) return;
+  const t = ctx.currentTime;
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuffer(ctx);
+  const f = ctx.createBiquadFilter();
+  f.type = type;
+  f.frequency.value = freq;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(f).connect(g).connect(master);
+  src.start(t, Math.random());
+  src.stop(t + dur + 0.02);
+}
+
+function tone(freq, when, dur, vol, type = "sine") {
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, when);
+  g.gain.exponentialRampToValueAtTime(vol, when + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  o.connect(g).connect(master);
+  o.start(when);
+  o.stop(when + dur + 0.05);
+}
+
+// my own little minor-key lullaby, played like a music box
+const LULLABY = [
+  [659.25, 1], [880, 1], [1046.5, 1], [987.77, 1], [880, 1], [783.99, 1], [659.25, 2],
+  [698.46, 1], [659.25, 1], [587.33, 1], [659.25, 1], [523.25, 1], [440, 3],
+];
+
+function musicBox() {
+  if (!running || !ctx) return;
+  let t = ctx.currentTime + 0.1;
+  LULLABY.forEach(([f, beats]) => {
+    tone(f, t, 1.6, 0.05, "sine");
+    tone(f * 2, t, 0.7, 0.012, "triangle");
+    t += beats * 0.46;
+  });
+}
+
+function owl() {
+  if (!running || !ctx) return;
+  const t = ctx.currentTime;
+  [0, 0.55].forEach((d, i) => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(i ? 360 : 400, t + d);
+    o.frequency.linearRampToValueAtTime(i ? 300 : 360, t + d + 0.4);
+    g.gain.setValueAtTime(0.0001, t + d);
+    g.gain.linearRampToValueAtTime(0.06, t + d + 0.1);
+    g.gain.linearRampToValueAtTime(0.0001, t + d + 0.45);
+    o.connect(g).connect(master);
+    o.start(t + d);
+    o.stop(t + d + 0.5);
+  });
+}
+
+export const sfx = {
+  step: (run) => burst(run ? 520 : 380, 0.07, run ? 0.09 : 0.06),
+  door() {
+    if (!running || !ctx) return;
+    creakOnce(1.6);
+    setTimeout(() => burst(160, 0.25, 0.25), 1500);
+  },
+  caw() {
+    if (!running || !ctx) return;
+    [0, 0.28, 0.6, 0.95].forEach((d) =>
+      setTimeout(() => {
+        if (!running || !ctx) return;
+        const t = ctx.currentTime;
+        const o = ctx.createOscillator();
+        const bp = ctx.createBiquadFilter();
+        const g = ctx.createGain();
+        o.type = "sawtooth";
+        o.frequency.setValueAtTime(rand(620, 780), t);
+        o.frequency.exponentialRampToValueAtTime(320, t + 0.22);
+        bp.type = "bandpass";
+        bp.frequency.value = 1100;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.linearRampToValueAtTime(0.07, t + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+        o.connect(bp).connect(g).connect(master);
+        o.start(t);
+        o.stop(t + 0.3);
+      }, d * 1000)
+    );
+  },
+  whisper() {
+    burst(2600, 1.6, 0.12, "bandpass");
+    setTimeout(() => burst(1800, 1.2, 0.09, "bandpass"), 700);
+  },
+  chime() {
+    if (!running || !ctx) return;
+    const t = ctx.currentTime;
+    tone(659.25, t, 1.2, 0.05);
+    tone(987.77, t + 0.12, 1.4, 0.04);
+  },
+};
+
+function creakOnce(dur) {
+  const t = ctx.currentTime;
+  const o = ctx.createOscillator();
+  const bp = ctx.createBiquadFilter();
+  const g = ctx.createGain();
+  o.type = "sawtooth";
+  o.frequency.setValueAtTime(95, t);
+  o.frequency.linearRampToValueAtTime(rand(150, 210), t + dur * 0.5);
+  o.frequency.linearRampToValueAtTime(110, t + dur);
+  bp.type = "bandpass";
+  bp.frequency.value = 480;
+  bp.Q.value = 7;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(0.08, t + dur * 0.3);
+  g.gain.linearRampToValueAtTime(0.0001, t + dur);
+  o.connect(bp).connect(g).connect(master);
+  o.start(t);
+  o.stop(t + dur + 0.05);
+}
+
+// While the farm game is open: owls now and then, and the music box every so often.
+let gameOn = false;
+export function gameAudio(on) {
+  gameOn = on;
+  clearTimeout(tm.owl);
+  clearTimeout(tm.box);
+  if (!on) return;
+  const loopOwl = () => {
+    if (!gameOn) return;
+    owl();
+    tm.owl = setTimeout(loopOwl, rand(16000, 32000));
+  };
+  const loopBox = () => {
+    if (!gameOn) return;
+    musicBox();
+    tm.box = setTimeout(loopBox, rand(50000, 80000));
+  };
+  tm.owl = setTimeout(loopOwl, 9000);
+  tm.box = setTimeout(loopBox, 6000);
+}
+export function playMusicBox() {
+  musicBox();
 }
 
 if (typeof window !== "undefined") {

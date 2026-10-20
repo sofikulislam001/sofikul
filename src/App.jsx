@@ -10,6 +10,8 @@ import { startLightning } from "./fx.js";
 import Cursor from "./components/Cursor.jsx";
 import Konami from "./components/Konami.jsx";
 import { setLenis } from "./scroll.js";
+import { useMode } from "./mode.js";
+import FarmGame from "./components/FarmGame.jsx";
 import BootScreen from "./components/BootScreen.jsx";
 import MatrixRain from "./components/MatrixRain.jsx";
 import Marquee from "./components/Marquee.jsx";
@@ -58,6 +60,8 @@ let lenisRef = null;
 export default function App() {
   const { ui } = useLang();
   const [booting, setBooting] = useState(shouldBoot);
+  const mode = useMode();
+  const game = mode === "game";
 
   // Smooth inertia scrolling (skipped for reduced-motion users).
   useEffect(() => {
@@ -91,16 +95,16 @@ export default function App() {
     } catch {
       /* ignore */
     }
-    if (reduce || booting) return undefined;
+    if (reduce || booting || game) return undefined;
     return startLightning();
-  }, [booting]);
+  }, [booting, game]);
 
   // Freeze scrolling behind the boot intro.
   useEffect(() => {
     if (!lenisRef) return;
-    if (booting) lenisRef.stop();
+    if (booting || game) lenisRef.stop();
     else lenisRef.start();
-  }, [booting]);
+  }, [booting, game]);
 
   const finishBoot = () => {
     try {
@@ -113,15 +117,18 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <DhakaBackdrop />
-      <MatrixRain />
-      <Flashlight />
+      {!game && <DhakaBackdrop />}
+      {!game && <MatrixRain />}
+      {!game && <Flashlight />}
       <Cursor />
       <Konami />
       <div aria-hidden="true" className="crt" />
 
       <AnimatePresence>{booting && <BootScreen key="boot" onDone={finishBoot} />}</AnimatePresence>
 
+      {game && !booting && <FarmGame items={navItems} />}
+
+      {!game && (
       <div inert={booting ? "" : undefined} className="relative z-10">
         <ScrollHud />
         <a
@@ -146,6 +153,7 @@ export default function App() {
         </main>
         <Footer />
       </div>
+      )}
     </MotionConfig>
   );
 }

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Download, Terminal as TerminalIcon } from "lucide-react";
+import { ArrowRight, Download, Gamepad2, Terminal as TerminalIcon } from "lucide-react";
+import { setMode } from "../mode.js";
 import { profile, stats } from "../data/content.js";
 import { useLang } from "../i18n.jsx";
 import Emph from "../components/Emph.jsx";
@@ -75,6 +76,9 @@ export default function Hero({ active }) {
                   {ui.viewProjects} <ArrowRight size={18} aria-hidden="true" />
                 </a>
               </Magnetic>
+              <button type="button" onClick={() => setMode("game")} className="btn btn-ghost">
+                <Gamepad2 size={18} aria-hidden="true" /> {ui.exploreFarm}
+              </button>
               <a href="#terminal" className="btn btn-ghost">
                 <TerminalIcon size={18} aria-hidden="true" /> {ui.tryTerminal}
               </a>

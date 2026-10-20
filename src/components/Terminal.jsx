@@ -8,6 +8,11 @@ import { scrollToId } from "../scroll.js";
 import Window from "./Window.jsx";
 
 const FILES = ["about.txt", "skills.txt", "projects.txt", "contact.txt", "secret.txt"];
+// In the classic site we scroll; in the farm game the game opens that place.
+function jump(id) {
+  if (!scrollToId(id)) window.dispatchEvent(new CustomEvent("farm:goto", { detail: id }));
+}
+
 const GOTO = ["about", "skills", "projects", "github", "terminal", "faq", "contact"];
 const CHIPS = ["help", "about", "skills", "projects", "contact"];
 
@@ -142,16 +147,16 @@ export default function Terminal() {
       },
       goto() {
         const id = arg.toLowerCase();
-        if (!GOTO.includes(id) || !document.getElementById(id)) {
+        if (!GOTO.includes(id)) {
           text(t.gotoUsage, "err");
           return;
         }
         text(t.gotoDone(id));
-        setTimeout(() => scrollToId(id), 300);
+        setTimeout(() => jump(id), 300);
       },
       hire() {
         text(t.hire);
-        setTimeout(() => scrollToId("contact"), 700);
+        setTimeout(() => jump("contact"), 700);
       },
       sudo() {
         text(t.sudo, "err");
